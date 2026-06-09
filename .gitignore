@@ -11,4 +11,4 @@ npm-debug.log*
 Thumbs.db
 
 # Config containing secret active key
-config.json
+# Make sure your active key never get exposed

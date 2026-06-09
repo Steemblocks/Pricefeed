@@ -1,0 +1,21 @@
+{
+  "rpc_nodes": [
+    "https://api.steemit.com",
+    "https://api.moecki.online",
+    "https://api.justyy.com",
+    "https://api.steememory.com",
+    "https://api.wherein.io",
+    "https://api.campingclub.me",
+    "https://api.pennsif.net",
+    "https://api.dlike.io",
+    "https://api.worldofxpilar.com",
+    "https://steemapi.boylikegirl.club"
+  ],
+  "feed_steem_account": "yourwitness",
+  "feed_steem_active_key": "Your Active key",
+  "exchanges": ["coingecko"],
+  "interval": 60,
+  "price_feed_max_retry": 5,
+  "retry_interval": 10,
+  "peg_multi": 1
+}
