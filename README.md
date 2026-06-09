@@ -28,6 +28,7 @@ pm2 save
 ### Run in Docker
 
 1. **Build the image:**
+
 ```bash
 docker build -t pricefeed .
 ```
@@ -35,6 +36,7 @@ docker build -t pricefeed .
 2. **Run the container (mounting your local config.json):**
 
 On **Linux / macOS**:
+
 ```bash
 docker run -itd \
     --name pricefeed \
@@ -43,6 +45,7 @@ docker run -itd \
 ```
 
 On **Windows (PowerShell)**:
+
 ```powershell
 docker run -itd \
     --name pricefeed \
@@ -51,6 +54,7 @@ docker run -itd \
 ```
 
 3. **Monitor the logs:**
+
 ```bash
 docker logs -f pricefeed
 ```
@@ -61,18 +65,19 @@ Edit `config.json`:
 
 ```jsonc
 {
-  "rpc_nodes": [                          // List of Steem RPC nodes (cycles through on failure)
+  "rpc_nodes": [
+    // List of Steem RPC nodes (cycles through on failure)
     "https://api.steemit.com",
     "https://api.moecki.online",
-    "https://api.justyy.com"
+    "https://api.justyy.com",
   ],
-  "feed_steem_account": "",               // Your Steem witness account name (or set env var)
-  "feed_steem_active_key": "",            // Private active key (or set env var)
-  "exchanges": ["coingecko"],             // Price source
-  "interval": 60,                         // Minutes between feed publishes
-  "price_feed_max_retry": 5,              // Max retries for price API calls
-  "retry_interval": 10,                   // Seconds between retries
-  "peg_multi": 1                          // Feed bias (quote = 1 / peg_multi)
+  "feed_steem_account": "", // Your Steem witness account name (or set env var)
+  "feed_steem_active_key": "", // Private active key (or set env var)
+  "exchanges": ["coingecko"], // Price source
+  "interval": 60, // Minutes between feed publishes
+  "price_feed_max_retry": 5, // Max retries for price API calls
+  "retry_interval": 10, // Seconds between retries
+  "peg_multi": 1, // Feed bias (quote = 1 / peg_multi)
 }
 ```
 
@@ -88,12 +93,12 @@ export feed_steem_active_key="5K..."
 ## Troubleshooting
 
 ### `RPCError: unknown key:unknown key:`
+
 If you see this error when broadcasting the price feed, it means the blockchain node rejected the transaction. This is almost always caused by one of two things:
 
-1. **Incorrect Active Key:** You provided an invalid private active key or used your *posting* key by mistake. Double-check your private active key.
+1. **Incorrect Active Key:** You provided an invalid private active key or used your _posting_ key by mistake. Double-check your private active key.
 2. **Account is Not a Witness:** The publishing account must be registered as a witness on the Steem blockchain. If you have not run a `witness_update` transaction to register your account as a witness, the blockchain nodes will reject the `feed_publish` transaction with this error.
 
 ## License
 
 MIT
-
