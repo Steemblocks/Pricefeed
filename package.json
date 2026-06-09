@@ -1,0 +1,25 @@
+{
+  "name": "pricefeed",
+  "version": "2.0.0",
+  "description": "Price feed publisher for Steem witnesses",
+  "main": "feed.js",
+  "scripts": {
+    "start": "node feed.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MattyIce/pricefeed.git"
+  },
+  "author": "yabapmatt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MattyIce/pricefeed/issues"
+  },
+  "homepage": "https://github.com/MattyIce/pricefeed#readme",
+  "dependencies": {
+    "steem": "^0.7.1"
+  }
+}
