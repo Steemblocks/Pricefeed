@@ -33,7 +33,7 @@ pm2 save
 docker build -t pricefeed .
 ```
 
-2. **Run the container (mounting your local config.json):**
+1. **Run the container (mounting your local config.json):**
 
 On **Linux / macOS**:
 
@@ -53,7 +53,7 @@ docker run -itd \
     pricefeed
 ```
 
-3. **Monitor the logs:**
+1. **Monitor the logs:**
 
 ```bash
 docker logs -f pricefeed
