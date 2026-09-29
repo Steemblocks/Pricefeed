@@ -48,6 +48,18 @@ const exchangeLoaders = {
     log(`CoinGecko: $${price}`);
     return price;
   },
+  async binance() {
+    const data = await fetchJSON('https://api.binance.com/api/v3/ticker/price?symbol=STEEMUSDT');
+    const price = parseFloat(data.price);
+    log(`Binance: $${price}`);
+    return price;
+  },
+  async coinmarketcap() {
+    const res = await fetchJSON('https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail?slug=steem');
+    const price = parseFloat(res.data.statistics.price);
+    log(`CoinMarketCap: $${price}`);
+    return price;
+  },
 };
 
 // ── RPC Node Failover ──────────────────────────────────────────────────────────
@@ -119,34 +131,36 @@ async function publishWithRetry(price) {
 
 async function startProcess() {
   const enabledExchanges = config.exchanges ?? [];
-  log(`Fetching prices from: ${enabledExchanges.join(', ')}`);
+  log(`Fallback strategy enabled. Exchanges order: ${enabledExchanges.join(', ')}`);
 
-  // Fetch all prices in parallel
-  const results = await Promise.allSettled(
-    enabledExchanges
-      .filter(name => exchangeLoaders[name])
-      .map(name => exchangeLoaders[name]())
-  );
+  let finalPrice = null;
+  let successfulExchange = null;
 
-  // Warn about unknown exchanges
   for (const name of enabledExchanges) {
-    if (!exchangeLoaders[name]) log(`Unknown exchange: "${name}" — skipping`);
+    if (!exchangeLoaders[name]) {
+      log(`Unknown exchange: "${name}" — skipping`);
+      continue;
+    }
+
+    try {
+      const price = await exchangeLoaders[name]();
+      if (Number.isFinite(price) && price > 0) {
+        finalPrice = price;
+        successfulExchange = name;
+        break; // Stop at the first successful exchange
+      }
+    } catch (err) {
+      log(`Failed to fetch from ${name}: ${err.message}`);
+    }
   }
 
-  // Collect successful, valid prices
-  const prices = results
-    .filter(r => r.status === 'fulfilled' && Number.isFinite(r.value) && r.value > 0)
-    .map(r => r.value);
-
-  if (prices.length === 0) {
-    log('No valid prices retrieved. Skipping publish.');
+  if (finalPrice === null) {
+    log('No valid prices retrieved from any exchange. Skipping publish.');
     return;
   }
 
-  const avgPrice = prices.reduce((sum, p) => sum + p, 0) / prices.length;
-  log(`Prices: [${prices.map(p => p.toFixed(4)).join(', ')}] → Average: $${avgPrice.toFixed(4)}`);
-
-  await publishWithRetry(avgPrice);
+  log(`Using price from ${successfulExchange}: $${finalPrice.toFixed(4)}`);
+  await publishWithRetry(finalPrice);
 }
 
 // ── Startup Validation ─────────────────────────────────────────────────────────

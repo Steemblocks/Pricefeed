@@ -13,7 +13,7 @@
   ],
   "feed_steem_account": "yourwitness",
   "feed_steem_active_key": "Your Active key",
-  "exchanges": ["coingecko"],
+  "exchanges": ["binance", "coinmarketcap", "coingecko"],
   "interval": 33,
   "price_feed_max_retry": 5,
   "retry_interval": 10,
